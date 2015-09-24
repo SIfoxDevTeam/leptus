@@ -77,6 +77,10 @@ format([$~, $b|Fmt], LD=#log_data{content_length=B}, Acc) ->
     format(Fmt, LD, [integer_to_list(B)|Acc]);
 format([$~, $B|Fmt], LD=#log_data{content_length=B}, Acc) ->
     format(Fmt, LD, [integer_to_list(B)|Acc]);
+format([$~, $d|Fmt], LD=#log_data{data=B}, Acc) ->
+    format(Fmt, LD, [binary_to_list(B)|Acc]);
+format([$~, $D|Fmt], LD=#log_data{data=B}, Acc) ->
+    format(Fmt, LD, [integer_to_list(size(B))|Acc]);
 format([$~, ${|Fmt], LD=#log_data{headers=Headers}, Acc) ->
     {Name, Fmt1} = get_name(Fmt, []),
     format(Fmt1, LD, [get_value(Name, Headers)|Acc]);

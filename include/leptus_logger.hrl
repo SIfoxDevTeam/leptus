@@ -31,6 +31,7 @@
           uri = <<"/">> :: binary(),
           headers = [] :: [{binary(), iodata()}],
           status = 200 :: non_neg_integer(),
-          content_length = 0 :: non_neg_integer()
+          content_length = 0 :: non_neg_integer(),
+	  data :: binary()
         }).
 -type log_data() :: #log_data{}.
