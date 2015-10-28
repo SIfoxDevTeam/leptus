@@ -37,7 +37,7 @@
 -type headers() :: cowboy:http_headers().
 -type body() :: binary() | string() | {json | msgpack, leptus_json:json_term()}
               | {html, binary()}.
--type method() :: get | put | post | delete.
+-type method() :: get | put | post | delete | patch.
 -type response() :: {body(), handler_state()}
                   | {status(), body(), handler_state()}
                   | {status(), headers(), body(), handler_state()}.
@@ -124,6 +124,7 @@ is_defined(Handler, Func) ->
 http_method(<<"GET">>) -> get;
 http_method(<<"PUT">>) -> put;
 http_method(<<"POST">>) -> post;
+http_method(<<"PATCH">>) -> patch;
 http_method(<<"DELETE">>) -> delete;
 %% just to deal with CORS preflight request
 http_method(<<"OPTIONS">>) -> options;

@@ -41,7 +41,7 @@ walk_ast([{attribute, L, module, _}=Form|Rest], Acc, Routes) ->
 %% collect routes
 %% -----------------------------------------------------------------------------
 walk_ast([{function, _, Method, 3, _}=Form|Rest], Acc, Routes)
-  when Method =:= get; Method =:= put; Method =:= post; Method =:= delete ->
+  when Method =:= get; Method =:= put; Method =:= post; Method =:= delete; Method =:= patch ->
     Routes1 = check_clauses(Form),
     walk_ast(Rest, Acc ++ [Form], Routes ++ Routes1);
 %% -----------------------------------------------------------------------------
@@ -97,4 +97,5 @@ check_clauses({function, _, Method, 3, Clauses}) ->
 http_method(get) -> <<"GET">>;
 http_method(put) -> <<"PUT">>;
 http_method(post) -> <<"POST">>;
+http_method(patch) -> <<"PATCH">>;
 http_method(delete) -> <<"DELETE">>.
