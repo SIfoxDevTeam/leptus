@@ -35,7 +35,7 @@
 -type req() :: pid().
 -type status() :: non_neg_integer() | binary() | atom().
 -type headers() :: cowboy:http_headers().
--type body() :: binary() | string() | {json | msgpack, leptus_json:json_term()}
+-type body() :: binary() | string() | {json | leptus_json:json_term()}
               | {html, binary()}.
 -type method() :: get | put | post | delete | patch.
 -type response() :: {body(), handler_state()}
@@ -43,7 +43,7 @@
                   | {status(), headers(), body(), handler_state()}.
 -type terminate_reason() :: normal | not_allowed | unauthenticated
                           | no_permission | {error, any()}.
--type data_format() :: text | json | msgpack | html.
+-type data_format() :: text | json | html.
 -type status_code() :: 100..101 | 200..206 | 300..307 | 400..417 | 500..505.
 
 -export_type([status/0]).
@@ -412,8 +412,6 @@ reply(Status, Headers, Body, Req) ->
 -spec prepare_headers_body(headers(), body()) -> {headers(), body()}.
 prepare_headers_body(Headers, {json, Body}) ->
     {maybe_set_content_type(json, Headers), leptus_json:encode(Body)};
-prepare_headers_body(Headers, {msgpack, Body}) ->
-    {maybe_set_content_type(msgpack, Headers), msgpack:pack({Body}, [jiffy])};
 prepare_headers_body(Headers, {html, Body}) ->
     {maybe_set_content_type(html, Headers), Body};
 prepare_headers_body(Headers, Body) ->
@@ -433,8 +431,7 @@ maybe_set_content_type(Type, Headers) ->
 -spec content_type(data_format()) -> binary().
 content_type(text) -> <<"text/plain">>;
 content_type(html) -> <<"text/html">>;
-content_type(json) -> <<"application/json">>;
-content_type(msgpack) -> <<"application/x-msgpack">>.
+content_type(json) -> <<"application/json">>.
 
 %% -----------------------------------------------------------------------------
 %% HTTP status code bindings

@@ -111,19 +111,12 @@ method(Pid) ->
 body(Pid) ->
     Body = body_raw(Pid),
     case header(Pid, <<"content-type">>) of
-        %% decode body if content-type is json or msgpack
+        %% decode body if content-type is json
         <<"application/json">> ->
             try leptus_json:decode(Body) of
                 {_, _} -> Body;
                 Term -> Term
             catch _:_ -> Body
-            end;
-        <<"application/x-msgpack">> ->
-            case msgpack:unpack(Body) of
-                {ok, {UnpackedBody}} ->
-                    UnpackedBody;
-                _ ->
-                    Body
             end;
         _ ->
             Body
