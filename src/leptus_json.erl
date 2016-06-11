@@ -25,18 +25,6 @@
 %% -----------------------------------------------------------------------------
 -export([encode/1]).
 -export([decode/1]).
--export([parser/0]).
-
--ifdef(USE_JSX).
--define(ENCODE(Term), jsx:encode(Term)).
--define(DECODE(Term), jsx:decode(Term)).
--define(PARSER, jsx).
--else.
--define(USE_JIFFY, true).
--define(ENCODE(Term), jiffy_encode(Term)).
--define(DECODE(Term), jiffy_decode(Term)).
--define(PARSER, jiffy).
--endif.
 
 -type json_term() :: [json_term()]
                    | {binary() | atom(), json_term()}
@@ -49,34 +37,7 @@
 -export_type([json_term/0]).
 
 encode(Term) ->
-    ?ENCODE(Term).
+    jsx:encode(Term).
 
 decode(Term) ->
-    ?DECODE(Term).
-
-parser() ->
-    ?PARSER.
-
--ifdef(USE_JIFFY).
-
-%% -----------------------------------------------------------------------------
-%% internal
-%% -----------------------------------------------------------------------------
-jiffy_encode(Term) ->
-    jiffy:encode(before_encode(Term)).
-
-jiffy_decode(Bin) ->
-    after_decode(jiffy:decode(Bin)).
-
-%% -----------------------------------------------------------------------------
-%% before encoding - after decoding (only for jiffy)
-%% -----------------------------------------------------------------------------
-before_encode([{}]) -> {[]};
-before_encode(Term=[{_,_}|_]) -> {Term};
-before_encode(Term) -> Term.
-
-after_decode({[]}) -> [{}];
-after_decode({Term}) -> Term;
-after_decode(Term) -> Term.
-
--endif.
+    jsx:decode(Term).
